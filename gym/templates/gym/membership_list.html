@@ -1,0 +1,12 @@
+{% extends "gym/base.html" %}
+{% block title %}Memberships{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between mb-3"><h3>Memberships</h3><a href="{% url 'membership_create' %}" class="btn btn-warning">+ Assign Membership</a></div>
+<div class="card shadow-sm"><div class="table-responsive"><table class="table mb-0 align-middle">
+  <thead class="table-light"><tr><th>Member</th><th>Plan</th><th>Start</th><th>End</th><th>Status</th><th></th></tr></thead>
+  {% for ms in memberships %}<tr><td><a href="{% url 'member_detail' ms.member.pk %}">{{ ms.member }}</a></td><td>{{ ms.plan.name }}</td><td>{{ ms.start_date }}</td><td>{{ ms.end_date }}</td>
+    <td>{% if ms.is_active %}<span class="badge text-bg-success">Active ({{ ms.days_left }}d left)</span>{% else %}<span class="badge text-bg-secondary">Inactive</span>{% endif %}</td>
+    <td class="text-end"><a class="btn btn-sm btn-outline-danger" href="{% url 'membership_delete' ms.pk %}">Delete</a></td></tr>
+  {% empty %}<tr><td colspan="6" class="text-center text-muted py-4">No memberships yet.</td></tr>{% endfor %}
+</table></div></div>
+{% endblock %}

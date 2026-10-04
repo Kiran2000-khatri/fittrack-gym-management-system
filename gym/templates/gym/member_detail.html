@@ -1,0 +1,34 @@
+{% extends "gym/base.html" %}
+{% block title %}{{ member.full_name }}{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between mb-3">
+  <h3>{{ member.full_name }}</h3>
+  <div><a href="{% url 'membership_create' %}?member={{ member.pk }}" class="btn btn-warning">Assign Plan</a>
+  <a href="{% url 'member_edit' member.pk %}" class="btn btn-outline-primary">Edit</a></div>
+</div>
+<div class="row g-3">
+  <div class="col-lg-4"><div class="card shadow-sm"><div class="card-body">
+    <p class="mb-1"><b>Phone:</b> {{ member.phone }}</p>
+    <p class="mb-1"><b>Email:</b> {{ member.email|default:"-" }}</p>
+    <p class="mb-1"><b>Gender:</b> {{ member.get_gender_display }}</p>
+    <p class="mb-1"><b>DOB:</b> {{ member.date_of_birth|default:"-" }}</p>
+    <p class="mb-1"><b>Address:</b> {{ member.address|default:"-" }}</p>
+    <p class="mb-1"><b>Joined:</b> {{ member.joined_on }}</p>
+    <p class="mb-0"><b>Trainer:</b> {{ member.trainer|default:"-" }}</p>
+  </div></div></div>
+  <div class="col-lg-8">
+    <div class="card shadow-sm mb-3"><div class="card-body"><h5>Memberships</h5>
+      <table class="table table-sm mb-0">{% for ms in memberships %}
+        <tr><td>{{ ms.plan.name }}</td><td>{{ ms.start_date }} &rarr; {{ ms.end_date }}</td><td>{% if ms.is_active %}<span class="badge text-bg-success">Active</span>{% else %}<span class="badge text-bg-secondary">Inactive</span>{% endif %}</td></tr>
+      {% empty %}<tr><td class="text-muted">None yet.</td></tr>{% endfor %}</table></div></div>
+    <div class="card shadow-sm mb-3"><div class="card-body"><h5>Payments</h5>
+      <table class="table table-sm mb-0">{% for p in payments %}
+        <tr><td>{{ p.paid_on }}</td><td>{{ p.get_method_display }}</td><td class="text-end">{{ p.amount }}</td></tr>
+      {% empty %}<tr><td class="text-muted">None yet.</td></tr>{% endfor %}</table></div></div>
+    <div class="card shadow-sm"><div class="card-body"><h5>Recent Attendance</h5>
+      <table class="table table-sm mb-0">{% for a in attendance %}
+        <tr><td>{{ a.check_in|date:"Y-m-d H:i" }}</td><td>{{ a.check_out|date:"H:i"|default:"-" }}</td></tr>
+      {% empty %}<tr><td class="text-muted">None yet.</td></tr>{% endfor %}</table></div></div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,11 @@
+{% extends "gym/base.html" %}
+{% block title %}Trainers{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between mb-3"><h3>Trainers</h3><a href="{% url 'trainer_create' %}" class="btn btn-warning">+ Add Trainer</a></div>
+<div class="card shadow-sm"><table class="table mb-0 align-middle">
+  <thead class="table-light"><tr><th>Name</th><th>Phone</th><th>Specialization</th><th></th></tr></thead>
+  {% for t in trainers %}<tr><td>{{ t.name }}</td><td>{{ t.phone }}</td><td>{{ t.specialization }}</td>
+    <td class="text-end"><a class="btn btn-sm btn-outline-primary" href="{% url 'trainer_edit' t.pk %}">Edit</a> <a class="btn btn-sm btn-outline-danger" href="{% url 'trainer_delete' t.pk %}">Delete</a></td></tr>
+  {% empty %}<tr><td colspan="4" class="text-center text-muted py-4">No trainers yet.</td></tr>{% endfor %}
+</table></div>
+{% endblock %}

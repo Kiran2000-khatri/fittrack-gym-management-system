@@ -1,0 +1,21 @@
+{% extends "gym/base.html" %}
+{% block title %}Attendance{% endblock %}
+{% block content %}
+<h3 class="mb-3">Attendance</h3>
+<div class="card shadow-sm mb-3"><div class="card-body">
+  <form method="post" class="row g-2">{% csrf_token %}
+    <div class="col-md-8">{{ form.member }}</div>
+    <div class="col-md-4"><button class="btn btn-warning w-100">Check In</button></div>
+  </form>
+</div></div>
+<div class="card shadow-sm mb-3"><div class="card-body"><h5>Today</h5>
+  <table class="table table-sm mb-0 align-middle">
+  {% for a in today_records %}<tr><td>{{ a.member }}</td><td>In: {{ a.check_in|date:"H:i" }}</td>
+    <td>{% if a.check_out %}Out: {{ a.check_out|date:"H:i" }}{% else %}
+      <form method="post" action="{% url 'check_out' a.pk %}">{% csrf_token %}<button class="btn btn-sm btn-outline-dark">Check Out</button></form>{% endif %}</td></tr>
+  {% empty %}<tr><td class="text-muted">No check-ins today.</td></tr>{% endfor %}
+  </table></div></div>
+<div class="card shadow-sm"><div class="card-body"><h5>Earlier</h5>
+  <table class="table table-sm mb-0">{% for a in history %}<tr><td>{{ a.member }}</td><td>{{ a.check_in|date:"Y-m-d H:i" }}</td><td>{{ a.check_out|date:"H:i"|default:"-" }}</td></tr>
+  {% empty %}<tr><td class="text-muted">No history.</td></tr>{% endfor %}</table></div></div>
+{% endblock %}

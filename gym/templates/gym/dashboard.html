@@ -1,0 +1,33 @@
+{% extends "gym/base.html" %}
+{% block title %}Dashboard{% endblock %}
+{% block content %}
+<h3 class="mb-4">Dashboard</h3>
+<div class="row g-3 mb-4">
+  <div class="col-6 col-lg-3"><div class="card stat shadow-sm"><div class="card-body"><div class="text-muted small">Total Members</div><div class="fs-3 fw-bold">{{ total_members }}</div></div></div></div>
+  <div class="col-6 col-lg-3"><div class="card stat shadow-sm"><div class="card-body"><div class="text-muted small">Active Memberships</div><div class="fs-3 fw-bold">{{ active_members }}</div></div></div></div>
+  <div class="col-6 col-lg-3"><div class="card stat shadow-sm"><div class="card-body"><div class="text-muted small">Revenue This Month</div><div class="fs-3 fw-bold">{{ revenue }}</div></div></div></div>
+  <div class="col-6 col-lg-3"><div class="card stat shadow-sm"><div class="card-body"><div class="text-muted small">Check-ins Today</div><div class="fs-3 fw-bold">{{ checkins_today }} <small class="fs-6 text-muted">({{ inside_now }} inside)</small></div></div></div></div>
+</div>
+<div class="row g-3">
+  <div class="col-lg-6"><div class="card shadow-sm"><div class="card-body">
+    <h5>Revenue - last 6 months</h5>
+    {% for m in months %}
+      <div class="d-flex align-items-center mb-2"><div style="width:90px" class="small">{{ m.label }}</div>
+        <div class="flex-grow-1 me-2"><div class="bar" style="width:{{ m.pct }}%"></div></div><div class="small fw-bold">{{ m.total }}</div></div>
+    {% endfor %}
+  </div></div></div>
+  <div class="col-lg-6"><div class="card shadow-sm"><div class="card-body">
+    <h5>Expiring in 7 days</h5>
+    {% for ms in expiring %}
+      <div class="d-flex justify-content-between border-bottom py-1"><a href="{% url 'member_detail' ms.member.pk %}">{{ ms.member }}</a><span class="text-muted small">{{ ms.plan.name }} - {{ ms.end_date }} ({{ ms.days_left }}d)</span></div>
+    {% empty %}<p class="text-muted mb-0">None.</p>{% endfor %}
+  </div></div></div>
+  <div class="col-12"><div class="card shadow-sm"><div class="card-body">
+    <h5>Recent Payments</h5>
+    <table class="table table-sm mb-0"><tbody>
+    {% for p in recent_payments %}<tr><td>{{ p.paid_on }}</td><td>{{ p.member }}</td><td>{{ p.get_method_display }}</td><td class="text-end">{{ p.amount }}</td></tr>
+    {% empty %}<tr><td class="text-muted">No payments yet.</td></tr>{% endfor %}
+    </tbody></table>
+  </div></div></div>
+</div>
+{% endblock %}
